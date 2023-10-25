@@ -5,12 +5,16 @@ const Main = () => {
   const [posts, setPosts] = React.useState([]);
 
   const fetchCharacters = async () => {
-    const response = await fetch('https://rickandmortyapi.com/api/character/?page=1');
+    let response: string | undefined;
+    localStorage.getItem('search')
+      ? (response = await fetch(
+          `https://rickandmortyapi.com/api/character/?name=${localStorage.getItem('search')}`
+        ))
+      : (response = await fetch('https://rickandmortyapi.com/api/character'));
 
     if (response.ok) {
       const data = await response.json();
       setPosts(data.results);
-      console.log(posts);
     } else {
       console.log('http error ' + response.status);
     }
@@ -35,6 +39,12 @@ const Main = () => {
     <>
       <div className={styles.main}>
         <h1>Rick and Morty</h1>
+        <h2>
+          Characters for key:{' '}
+          {localStorage.getItem('search')
+            ? localStorage.getItem('search')
+            : 'all random characters'}
+        </h2>
         <div className={styles.container}>{renderPosts()}</div>
       </div>
     </>
