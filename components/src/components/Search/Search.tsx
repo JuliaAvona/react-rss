@@ -1,22 +1,29 @@
-import React from 'react';
+import React, { useState, KeyboardEvent, ChangeEvent } from 'react';
 import styles from './Search.module.scss';
 
-const Search = () => {
-  const [search, setSearch] = React.useState('');
+const Search: React.FC = () => {
+  const [search, setSearch] = useState<string>('');
 
-  function getSearch() {
-    console.log(search);
+  function getSearch(): void {
     localStorage.setItem('search', search);
   }
 
-  search;
+  function handleKeyDown(e: KeyboardEvent<HTMLInputElement>): void {
+    if (e.keyCode === 13) {
+      getSearch();
+    }
+  }
+
   return (
     <div className={styles.search}>
       <input
         type="text"
         placeholder="Search #Rick"
         value={search}
-        onChange={(e) => setSearch(e.target.value)}
+        onChange={(e: ChangeEvent<HTMLInputElement>) =>
+          setSearch(e.target.value)
+        }
+        onKeyDown={handleKeyDown}
       />
       <button type="submit" onClick={() => getSearch()}>
         Search

@@ -1,11 +1,11 @@
 import React from 'react';
-import { BrowserRouter, Route, Routes, useNavigate } from 'react-router-dom';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Navbar from './components/Navbar/Navbar';
 import About from './pages/About/About';
 import Main from './pages/Main/Main';
 import Error from './pages/Error/Error';
 
-function App() {
+const App: React.FC = () => {
   return (
     <BrowserRouter>
       <Navbar />
@@ -17,6 +17,6 @@ function App() {
       </Routes>
     </BrowserRouter>
   );
-}
+};
 
 export default App;
