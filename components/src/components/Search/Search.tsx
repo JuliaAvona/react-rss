@@ -15,6 +15,7 @@ class Search extends React.Component<{}, ISearchState> {
   }
 
   getSearch = (): void => {
+    if (!this.state.search) return;
     localStorage.setItem('search', this.state.search);
     window.location.reload();
   };

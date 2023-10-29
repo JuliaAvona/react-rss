@@ -27,12 +27,6 @@ class Main extends React.Component<{}, IMainState> {
     this.fetchCharacters();
   }
 
-  componentDidUpdate(prevProps: {}, prevState: IMainState) {
-    if (localStorage.getItem('search') !== prevState.posts[0]?.name) {
-      this.fetchCharacters();
-    }
-  }
-
   fetchCharacters = async () => {
     this.setState({ loading: true });
     
