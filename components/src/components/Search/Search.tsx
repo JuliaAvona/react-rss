@@ -1,35 +1,50 @@
-import React, { useState, KeyboardEvent, ChangeEvent } from 'react';
+import React from 'react';
 import styles from './Search.module.scss';
 
-const Search: React.FC = () => {
-  const [search, setSearch] = useState<string>('');
+interface ISearchState {
+  search: string;
+}
 
-  function getSearch(): void {
-    localStorage.setItem('search', search);
+class Search extends React.Component<{}, ISearchState> {
+  constructor(props: {}) {
+    super(props);
+
+    this.state = {
+      search: ''
+    };
   }
 
-  function handleKeyDown(e: KeyboardEvent<HTMLInputElement>): void {
+  getSearch = (): void => {
+    localStorage.setItem('search', this.state.search);
+    window.location.reload();
+  };
+
+  handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>): void => {
     if (e.keyCode === 13) {
-      getSearch();
+      this.getSearch();
     }
-  }
+  };
 
-  return (
-    <div className={styles.search}>
-      <input
-        type="text"
-        placeholder="Search #Rick"
-        value={search}
-        onChange={(e: ChangeEvent<HTMLInputElement>) =>
-          setSearch(e.target.value)
-        }
-        onKeyDown={handleKeyDown}
-      />
-      <button type="submit" onClick={() => getSearch()}>
-        Search
-      </button>
-    </div>
-  );
-};
+  handleInputChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    this.setState({ search: e.target.value });
+  };
+
+  render() {
+    return (
+      <div className={styles.search}>
+        <input
+          type="text"
+          placeholder="Search #Rick"
+          value={this.state.search}
+          onChange={this.handleInputChange}
+          onKeyDown={this.handleKeyDown}
+        />
+        <button type="submit" onClick={this.getSearch}>
+          Search
+        </button>
+      </div>
+    );
+  }
+}
 
 export default Search;
