@@ -5,12 +5,11 @@ interface ISearchState {
   search: string;
 }
 
-class Search extends React.Component<{}, ISearchState> {
-  constructor(props: {}) {
+class Search extends React.Component<Record<string, never>, ISearchState> {
+  constructor(props: Record<string, never>) {
     super(props);
-
     this.state = {
-      search: ''
+      search: '',
     };
   }
 
