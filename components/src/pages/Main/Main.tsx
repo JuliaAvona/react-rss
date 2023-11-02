@@ -1,39 +1,38 @@
 import React, { useState, useEffect } from 'react';
 import styles from './Main.module.scss';
-
-interface ICharacter {
-  name: string;
-  image: string;
-  species: string;
-  type: string;
-}
+import { ICharacter } from '../../types/types';
 
 const Main: React.FC = () => {
   const [posts, setPosts] = useState<ICharacter[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
+  const [page, setPage] = useState<number>(1);
+  const [totalPages, setTotalPages] = useState<number>(1);
 
-  const throwError = () => {
-    throw new Error('Error Boundary Test!');
+  const handleNextPage = (): void => {
+    setPage(page + 1);
+  };
+
+  const handlePrevPage = (): void => {
+    if (page > 1) {
+      setPage(page - 1);
+    }
   }
 
   useEffect(() => {
     const fetchCharacters = async () => {
       setLoading(true);
-
-      let response: Response;
       const searchTerm = localStorage.getItem('search');
 
-      if (searchTerm) {
-        response = await fetch(
-          `https://rickandmortyapi.com/api/character/?name=${searchTerm}`
-        );
-      } else {
-        response = await fetch('https://rickandmortyapi.com/api/character');
-      }
+      const url = searchTerm
+        ? `https://rickandmortyapi.com/api/character/?page=${page}&name=${searchTerm}`
+        : `https://rickandmortyapi.com/api/character?page=${page}`;
+
+      const response = await fetch(url);
 
       if (response.ok) {
         const data = await response.json();
         setPosts(data.results);
+        setTotalPages(data.info.pages);
       } else {
         console.log('http error ' + response.status);
       }
@@ -41,12 +40,13 @@ const Main: React.FC = () => {
     };
 
     fetchCharacters();
-  }, []);
+  }, [page]);
 
   const renderPosts = () => {
     if (loading) {
       return <div className={styles.spinner}></div>;
     }
+
 
     return posts.map((post, index) => (
       <div className={styles.card} key={index}>
@@ -61,9 +61,13 @@ const Main: React.FC = () => {
   return (
     <div className={styles.main}>
       <h1>Rick and Morty</h1>
-      <button onClick={throwError}>Throw Error</button>
+      <h2 className={styles.pagination}>
+        <button onClick={handlePrevPage} disabled={page === 1}>Prev Page</button>
+        Page: {page}/{totalPages}
+        <button onClick={handleNextPage} disabled={page === totalPages}>Next Page</button>
+      </h2>
       <h2>
-        Characters for key:
+        Characters for key:{'  '}
         {localStorage.getItem('search') || 'all random characters'}
       </h2>
       <div className={styles.container}>{renderPosts()}</div>
