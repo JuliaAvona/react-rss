@@ -1,50 +1,39 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styles from './Search.module.scss';
 
-interface ISearchState {
-  search: string;
-}
+const Search: React.FC = () => {
+  const [search, setSearch] = useState<string>('');
 
-class Search extends React.Component<Record<string, never>, ISearchState> {
-  constructor(props: Record<string, never>) {
-    super(props);
-    this.state = {
-      search: '',
-    };
-  }
-
-  getSearch = (): void => {
-    if (!this.state.search) return;
-    localStorage.setItem('search', this.state.search);
+  const getSearch = (): void => {
+    if (!search) return;
+    localStorage.setItem('search', search);
     window.location.reload();
   };
 
-  handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>): void => {
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>): void => {
     if (e.keyCode === 13) {
-      this.getSearch();
+      getSearch();
     }
   };
 
-  handleInputChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    this.setState({ search: e.target.value });
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    setSearch(e.target.value);
   };
 
-  render() {
-    return (
-      <div className={styles.search}>
-        <input
-          type="text"
-          placeholder="Search #Rick"
-          value={this.state.search}
-          onChange={this.handleInputChange}
-          onKeyDown={this.handleKeyDown}
-        />
-        <button type="submit" onClick={this.getSearch}>
-          Search
-        </button>
-      </div>
-    );
-  }
+  return (
+    <div className={styles.search}>
+      <input
+        type="text"
+        placeholder="Search #Rick"
+        value={search}
+        onChange={handleInputChange}
+        onKeyDown={handleKeyDown}
+      />
+      <button type="submit" onClick={getSearch}>
+        Search
+      </button>
+    </div>
+  );
 }
 
 export default Search;

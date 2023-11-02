@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import styles from './Main.module.scss';
 
 interface ICharacter {
@@ -8,57 +8,47 @@ interface ICharacter {
   type: string;
 }
 
-interface IMainState {
-  posts: ICharacter[];
-  loading: boolean;
-}
+const Main: React.FC = () => {
+  const [posts, setPosts] = useState<ICharacter[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
 
-class Main extends React.Component<Record<string, never>, IMainState> {
-  constructor(props: Record<string, never>) {
-    super(props);
-    this.state = {
-      posts: [],
-      loading: false,
-    };
-  }
-
-  throwError() {
+  const throwError = () => {
     throw new Error('Error Boundary Test!');
   }
 
-  componentDidMount() {
-    this.fetchCharacters();
-  }
+  useEffect(() => {
+    const fetchCharacters = async () => {
+      setLoading(true);
 
-  fetchCharacters = async () => {
-    this.setState({ loading: true });
+      let response: Response;
+      const searchTerm = localStorage.getItem('search');
 
-    let response: Response;
-    const searchTerm = localStorage.getItem('search');
+      if (searchTerm) {
+        response = await fetch(
+          `https://rickandmortyapi.com/api/character/?name=${searchTerm}`
+        );
+      } else {
+        response = await fetch('https://rickandmortyapi.com/api/character');
+      }
 
-    if (searchTerm) {
-      response = await fetch(
-        `https://rickandmortyapi.com/api/character/?name=${searchTerm}`
-      );
-    } else {
-      response = await fetch('https://rickandmortyapi.com/api/character');
-    }
+      if (response.ok) {
+        const data = await response.json();
+        setPosts(data.results);
+      } else {
+        console.log('http error ' + response.status);
+      }
+      setLoading(false);
+    };
 
-    if (response.ok) {
-      const data = await response.json();
-      this.setState({ posts: data.results });
-    } else {
-      console.log('http error ' + response.status);
-    }
-    this.setState({ loading: false });
-  };
+    fetchCharacters();
+  }, []);
 
-  renderPosts = () => {
-    if (this.state.loading) {
+  const renderPosts = () => {
+    if (loading) {
       return <div className={styles.spinner}></div>;
     }
 
-    return this.state.posts.map((post, index) => (
+    return posts.map((post, index) => (
       <div className={styles.card} key={index}>
         <img src={post.image} alt={post.name} className={styles.image} />
         <div className={styles.name}>Name: {post.name}</div>
@@ -68,19 +58,17 @@ class Main extends React.Component<Record<string, never>, IMainState> {
     ));
   };
 
-  render() {
-    return (
-      <div className={styles.main}>
-        <h1>Rick and Morty</h1>
-        <button onClick={this.throwError}>Throw Error</button>
-        <h2>
-          Characters for key:{' '}
-          {localStorage.getItem('search') || 'all random characters'}
-        </h2>
-        <div className={styles.container}>{this.renderPosts()}</div>
-      </div>
-    );
-  }
+  return (
+    <div className={styles.main}>
+      <h1>Rick and Morty</h1>
+      <button onClick={throwError}>Throw Error</button>
+      <h2>
+        Characters for key:
+        {localStorage.getItem('search') || 'all random characters'}
+      </h2>
+      <div className={styles.container}>{renderPosts()}</div>
+    </div>
+  );
 }
 
 export default Main;
