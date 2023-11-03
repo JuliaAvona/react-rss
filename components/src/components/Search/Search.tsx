@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import styles from './Search.module.scss';
 
 const Search: React.FC = () => {
-  const [search, setSearch] = useState<string>('');
+  const [search, setSearch] = useState<string>(localStorage.getItem('search') || '');
 
   const getSearch = (): void => {
     if (!search) return;

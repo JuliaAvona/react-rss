@@ -7,6 +7,17 @@ const Main: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [page, setPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(1);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [currentCharacter, setCurrentCharacter] = useState<ICharacter | null>(null);
+
+  const openModal = (character: ICharacter) => {
+    setCurrentCharacter(character);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
 
   const handleNextPage = (): void => {
     setPage(page + 1);
@@ -49,7 +60,7 @@ const Main: React.FC = () => {
 
 
     return posts.map((post, index) => (
-      <div className={styles.card} key={index}>
+      <div className={styles.card} key={index} onClick={() => openModal(post)}>
         <img src={post.image} alt={post.name} className={styles.image} />
         <div className={styles.name}>Name: {post.name}</div>
         <div className={styles.species}>Species: {post.species}</div>
@@ -70,7 +81,20 @@ const Main: React.FC = () => {
         Characters for key:{'  '}
         {localStorage.getItem('search') || 'all random characters'}
       </h2>
-      <div className={styles.container}>{renderPosts()}</div>
+      <div className={styles.content}>
+        <div className={styles.container}>{renderPosts()}</div>
+        <div className={`${styles.modal} ${isModalOpen ? styles.active : ''}`}>
+          {currentCharacter && (
+            <div className={styles.modalContent}>
+              <img src={currentCharacter.image} alt={currentCharacter.name} />
+              <p>{currentCharacter.species}</p>
+              <p>{currentCharacter.type}</p>
+              <h3>{currentCharacter.name}</h3>
+              <button onClick={closeModal}>Close</button>
+            </div>
+          )}
+        </div>
+      </div>
     </div>
   );
 }

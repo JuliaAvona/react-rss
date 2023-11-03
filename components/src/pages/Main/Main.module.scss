@@ -1,8 +1,7 @@
 .main {
   height: 95vw;
-  max-width: 1280px;
+  max-width: 1920px;
   background-color: rgb(255, 255, 255);
-  border: 0.1rem solid rgba(0, 0, 0, 0.151);
   display: flex;
   align-items: center;
   flex-direction: column;
@@ -15,37 +14,50 @@
     margin: 2rem;
   }
 
-  .container {
+  .content {
     display: flex;
-    flex-wrap: wrap;
-    gap: 2rem;
-    justify-content: center;
+    gap: 3rem;
 
-    .card {
-      max-width: 200px;
-      height: auto;
-      border: 0.1rem solid black;
-      border-radius: 0.5rem;
-      overflow: hidden;
-      transition: all 0.3s ease-in-out;
-      background-color: rgb(255, 251, 247);
-      cursor: pointer;
+    .container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2rem;
+      justify-content: flex-start;
+      width: 50%;
+      height: 100%;
+    }
 
-      .name,
-      .species,
-      .type {
-        text-align: center;
-        padding: 1rem;
-        font-size: 1rem;
+    .modal {
+      width: 50%;
+      height: 100%;
+      background-color: rgba(255, 255, 255, 0.9);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 3px solid black;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 5rem;
+
+      opacity: 0;
+      transform: translateX(100%);
+      transition: opacity 0.3s ease, transform 0.3s ease;
+
+      &.active {
+        opacity: 1;
+        transform: translateX(0);
       }
 
-      .image {
-        width: 100%;
-        height: auto;
-      }
 
-      &:hover {
-        transform: scale(1.05);
+      .modalContent {
+        background-color: rgb(255, 255, 255);
+
+        img {
+          width: 100%;
+          height: auto;
+        }
       }
     }
   }
