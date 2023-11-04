@@ -6,16 +6,26 @@ import Main from './pages/Main/Main';
 import Error from './pages/Error/Error';
 import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary';
 import { getPlanets } from './api/api';
+import usePagination from './hooks/usePagination';
 
 const App: React.FC = () => {
-  const [page, setPage] = React.useState(1);
+  const {
+    page,
+    setPage,
+    allPages,
+    total,
+    limit,
+    setLimit
+  } = usePagination();
+
+  console.log('page, total, limit, allPages ' + page, total, limit, allPages);
 
   return (
     <BrowserRouter>
       <Navbar />
       <ErrorBoundary>
         <Routes>
-          <Route path="/" element={<Main getPlanets={getPlanets} page={page} />} />
+          <Route path="/" element={<Main getPlanets={getPlanets} page={page} allPages={allPages} setPage={setPage} />} />
           <Route path="/about" element={<About />} />
           <Route path="/error" element={<Error />} />
           <Route path="*" element={<Error />} />

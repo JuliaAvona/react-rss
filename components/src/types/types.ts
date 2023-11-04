@@ -1,3 +1,10 @@
+export interface PlanetResponse {
+  count: number;
+  next: string | null;
+  previous: string | null;
+  results: Planet[];
+}
+
 export interface Planet {
   name: string;
   rotation_period: string;
@@ -12,7 +19,9 @@ export interface Planet {
   edited: string;
 }
 
-export interface MainProps {
-  getPlanets: (params: { page: number }) => Promise<any[]>;
-  page: number;
+interface MainProps {
+    getPlanets: (options?: any) => Promise<any>;
+    page: number;
+    allPages: number;
+    setPage: (page: number) => void;
 }
