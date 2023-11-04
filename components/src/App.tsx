@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Route, Routes, Navigate } from 'react-router-dom';
 import Navbar from './components/Navbar/Navbar';
 import About from './pages/About/About';
 import Main from './pages/Main/Main';
@@ -17,8 +17,6 @@ const App: React.FC = () => {
     limit,
     setLimit
   } = usePagination();
-
-  console.log('page, total, limit, allPages ' + page, total, limit, allPages);
 
   return (
     <BrowserRouter>

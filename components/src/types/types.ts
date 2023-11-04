@@ -19,7 +19,7 @@ export interface Planet {
   edited: string;
 }
 
-interface MainProps {
+export interface MainProps {
     getPlanets: (options?: any) => Promise<any>;
     page: number;
     allPages: number;
