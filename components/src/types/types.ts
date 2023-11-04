@@ -1,12 +1,18 @@
-export interface MainProps {
-  posts: ICharacter[];
-  loading: boolean;
-  fetchCharacters: () => Promise<void>;
+export interface Planet {
+  name: string;
+  rotation_period: string;
+  orbital_period: string;
+  diameter: string;
+  climate: string;
+  gravity: string;
+  terrain: string;
+  surface_water: string;
+  population: string;
+  created: string;
+  edited: string;
 }
 
-export interface ICharacter {
-  name: string;
-  image: string;
-  species: string;
-  type: string;
+export interface MainProps {
+  getPlanets: (params: { page: number }) => Promise<any[]>;
+  page: number;
 }

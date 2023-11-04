@@ -1,99 +1,44 @@
 import React, { useState, useEffect } from 'react';
 import styles from './Main.module.scss';
-import { ICharacter } from '../../types/types';
+import Pagination from '../../components/Pagination/Pagination';
+import { Planet, MainProps } from '../../types/types';
 
-const Main: React.FC = () => {
-  const [posts, setPosts] = useState<ICharacter[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [page, setPage] = useState<number>(1);
-  const [totalPages, setTotalPages] = useState<number>(1);
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const [currentCharacter, setCurrentCharacter] = useState<ICharacter | null>(null);
-
-  const openModal = (character: ICharacter) => {
-    setCurrentCharacter(character);
-    setIsModalOpen(true);
-  };
-
-  const closeModal = () => {
-    setIsModalOpen(false);
-  };
-
-  const handleNextPage = (): void => {
-    setPage(page + 1);
-  };
-
-  const handlePrevPage = (): void => {
-    if (page > 1) {
-      setPage(page - 1);
-    }
-  }
+const Main: React.FC<MainProps> = ({ getPlanets, page }) => {
+  const [planets, setPlanets] = useState<Planet[]>([]);
 
   useEffect(() => {
-    const fetchCharacters = async () => {
-      setLoading(true);
-      const searchTerm = localStorage.getItem('search');
-
-      const url = searchTerm
-        ? `https://rickandmortyapi.com/api/character/?page=${page}&name=${searchTerm}`
-        : `https://rickandmortyapi.com/api/character?page=${page}`;
-
-      const response = await fetch(url);
-
-      if (response.ok) {
-        const data = await response.json();
-        setPosts(data.results);
-        setTotalPages(data.info.pages);
-      } else {
-        console.log('http error ' + response.status);
+    const fetchData = async () => {
+      try {
+        const data = await getPlanets({ page: page });
+        setPlanets(data.results);
+      } catch (error) {
+        console.error("Error fetching planets:", error);
       }
-      setLoading(false);
     };
+    fetchData();
+  }, [getPlanets, page]);
 
-    fetchCharacters();
-  }, [page]);
-
-  const renderPosts = () => {
-    if (loading) {
-      return <div className={styles.spinner}></div>;
-    }
-
-
-    return posts.map((post, index) => (
-      <div className={styles.card} key={index} onClick={() => openModal(post)}>
-        <img src={post.image} alt={post.name} className={styles.image} />
-        <div className={styles.name}>Name: {post.name}</div>
-        <div className={styles.species}>Species: {post.species}</div>
-        <div className={styles.type}>{post.type}</div>
-      </div>
-    ));
-  };
 
   return (
     <div className={styles.main}>
-      <h1>Rick and Morty</h1>
-      <h2 className={styles.pagination}>
-        <button onClick={handlePrevPage} disabled={page === 1}>Prev Page</button>
-        Page: {page}/{totalPages}
-        <button onClick={handleNextPage} disabled={page === totalPages}>Next Page</button>
-      </h2>
-      <h2>
-        Characters for key:{'  '}
-        {localStorage.getItem('search') || 'all random characters'}
-      </h2>
-      <div className={styles.content}>
-        <div className={styles.container}>{renderPosts()}</div>
-        <div className={`${styles.modal} ${isModalOpen ? styles.active : ''}`}>
-          {currentCharacter && (
-            <div className={styles.modalContent}>
-              <img src={currentCharacter.image} alt={currentCharacter.name} />
-              <p>{currentCharacter.species}</p>
-              <p>{currentCharacter.type}</p>
-              <h3>{currentCharacter.name}</h3>
-              <button onClick={closeModal}>Close</button>
-            </div>
-          )}
-        </div>
+      <h1>Planets</h1>
+      <Pagination page={page} />
+      <div className={styles.planets}>
+        {planets?.map((planet, index) => (
+          <div key={index} className={styles.planet}>
+            <h2>{planet.name}</h2>
+            <p><strong>Rotation Period:</strong> {planet.rotation_period}</p>
+            <p><strong>Orbital Period:</strong> {planet.orbital_period}</p>
+            <p><strong>Diameter:</strong> {planet.diameter}</p>
+            <p><strong>Climate:</strong> {planet.climate}</p>
+            <p><strong>Gravity:</strong> {planet.gravity}</p>
+            <p><strong>Terrain:</strong> {planet.terrain}</p>
+            <p><strong>Surface Water:</strong> {planet.surface_water}</p>
+            <p><strong>Population:</strong> {planet.population}</p>
+            <p><strong>Created:</strong> {planet.created}</p>
+            <p><strong>Edited:</strong> {planet.edited}</p>
+          </div>
+        ))}
       </div>
     </div>
   );
