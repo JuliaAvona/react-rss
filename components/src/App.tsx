@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary';
 
 const App: React.FC = () => {
@@ -7,22 +8,42 @@ const App: React.FC = () => {
   const [inputLimit, setInputLimit] = useState<string>(localStorage.getItem('inputLimit') || '10');
   const [searchQuery, setSearchQuery] = useState<string>(localStorage.getItem('searchQuery') || '');
   const [inputSearchQuery, setInputSearchQuery] = useState<string>(localStorage.getItem('inputSearchQuery') || '');
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [totalPages, setTotalPages] = useState<number>(0);
+
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const getProducts = async () => {
     const baseEndpoint = 'https://dummyjson.com/products';
     const searchParam = searchQuery ? `/search?q=${encodeURIComponent(searchQuery)}` : '';
     const limitParam = `limit=${limit}`;
+    const skip = (currentPage - 1) * limit;
+    const skipParam = `skip=${skip}`;
 
-    const url = `${baseEndpoint}${searchParam}&${limitParam}`;
+    const url = `${baseEndpoint}${searchParam}&${limitParam}&${skipParam}`;
 
     const response = await fetch(url);
     const data = await response.json();
     setProducts(data.products);
+
+    const totalPagesCalculated = Math.ceil(data.total / limit);
+    setTotalPages(totalPagesCalculated);
   }
 
   useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const pageFromUrl = Number(params.get('page')) || 1;
+    setCurrentPage(pageFromUrl);
+  }, []);
+
+  useEffect(() => {
     getProducts();
-  }, [limit, searchQuery]);
+  }, [limit, searchQuery, currentPage]);
+
+  useEffect(() => {
+    navigate(`/search?page=${currentPage}`);
+  }, [currentPage]);
 
   useEffect(() => {
     try {
@@ -53,12 +74,22 @@ const App: React.FC = () => {
     const newLimit = parseInt(inputLimit, 10);
     if (!isNaN(newLimit)) {
       setLimit(newLimit);
+      setCurrentPage(1);
     }
   };
 
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setSearchQuery(inputSearchQuery);
+    setCurrentPage(1);
+  };
+
+  const handlePrevPage = () => {
+    setCurrentPage(Math.max(1, currentPage - 1));
+  };
+
+  const handleNextPage = () => {
+    setCurrentPage(Math.min(totalPages, currentPage + 1));
   };
 
   return (
@@ -76,9 +107,9 @@ const App: React.FC = () => {
           </button>
         </form>
         <div className="pagination">
-          <button>Prev Page</button>
-          <p>1 of 6</p>
-          <button>Next Page</button>
+          <button onClick={handlePrevPage}>Prev Page</button>
+          <p>{currentPage} of {totalPages}</p>
+          <button onClick={handleNextPage}>Next Page</button>
         </div>
         <form onSubmit={handleUpdateClick} className="control">
           <input
