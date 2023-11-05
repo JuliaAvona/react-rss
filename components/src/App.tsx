@@ -1,6 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary';
+import ErrorBoundary from './components/ErrorBoundary';
+import ProductList from './components/ProductList/ProductList';
+import SearchForm from './components/SearchForm/SearchForm';
+import Pagination from './components/Pagination/Pagination';
+import ResultsControl from './components/ResultsControl/ResultsControl';
+import Spinner from './components/Spinner/Spinner';
 
 const App: React.FC = () => {
   const [products, setProducts] = useState<any[]>([]);
@@ -10,18 +15,20 @@ const App: React.FC = () => {
   const [inputSearchQuery, setInputSearchQuery] = useState<string>(localStorage.getItem('inputSearchQuery') || '');
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(0);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const navigate = useNavigate();
   const location = useLocation();
 
   const getProducts = async () => {
+    setLoading(true);
     const baseEndpoint = 'https://dummyjson.com/products';
     const searchParam = searchQuery ? `/search?q=${encodeURIComponent(searchQuery)}` : '';
     const limitParam = `limit=${limit}`;
     const skip = (currentPage - 1) * limit;
     const skipParam = `skip=${skip}`;
 
-    const url = `${baseEndpoint}${searchParam}&${limitParam}&${skipParam}`;
+    const url = `${baseEndpoint}?${searchParam}&${limitParam}&${skipParam}`;
 
     const response = await fetch(url);
     const data = await response.json();
@@ -29,6 +36,7 @@ const App: React.FC = () => {
 
     const totalPagesCalculated = Math.ceil(data.total / limit);
     setTotalPages(totalPagesCalculated);
+    setLoading(false);
   }
 
   useEffect(() => {
@@ -56,19 +64,6 @@ const App: React.FC = () => {
     }
   }, [limit, inputLimit, searchQuery, inputSearchQuery]);
 
-  const createProducts = () => {
-    return products.map((product: any) => {
-      return (
-        <div className="product" key={product.id}>
-          <p>{product.title}</p>
-          <p>{product.description}</p>
-          <p>{product.brand}</p>
-          <img src={product.images[0]} alt={product.title} />
-        </div>
-      )
-    })
-  }
-
   const handleUpdateClick = (e: React.FormEvent) => {
     e.preventDefault();
     const newLimit = parseInt(inputLimit, 10);
@@ -95,36 +90,23 @@ const App: React.FC = () => {
   return (
     <div>
       <ErrorBoundary>
-        <form onSubmit={handleSearchSubmit} className="search">
-          <input
-            type="text"
-            value={inputSearchQuery}
-            onChange={e => setInputSearchQuery(e.target.value)}
-            placeholder="Search... #iphone"
-          />
-          <button type="submit">
-            Search
-          </button>
-        </form>
-        <div className="pagination">
-          <button onClick={handlePrevPage}>Prev Page</button>
-          <p>{currentPage} of {totalPages}</p>
-          <button onClick={handleNextPage}>Next Page</button>
-        </div>
-        <form onSubmit={handleUpdateClick} className="control">
-          <input
-            type="text"
-            value={inputLimit}
-            onChange={e => setInputLimit(e.target.value)}
-            placeholder="Results per page... #10"
-          />
-          <button type="submit">
-            Update Results
-          </button>
-        </form>
-        <div className="results">
-          {createProducts()}
-        </div>
+        <SearchForm
+          inputSearchQuery={inputSearchQuery}
+          handleSearchSubmit={handleSearchSubmit}
+          setInputSearchQuery={setInputSearchQuery}
+        />
+        <ResultsControl
+          inputLimit={inputLimit}
+          handleUpdateClick={handleUpdateClick}
+          setInputLimit={setInputLimit}
+        />
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          handlePrevPage={handlePrevPage}
+          handleNextPage={handleNextPage}
+        />
+        {loading ? <Spinner /> : <ProductList products={products} />}
       </ErrorBoundary>
     </div>
   );
