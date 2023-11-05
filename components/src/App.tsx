@@ -7,6 +7,38 @@ import Pagination from './components/Pagination/Pagination';
 import ResultsControl from './components/ResultsControl/ResultsControl';
 import Spinner from './components/Spinner/Spinner';
 
+interface ModalProps {
+  product: any;
+  onClose: () => void;
+}
+
+const Modal: React.FC<ModalProps> = ({ product, onClose }) => {
+  return (
+    <div style={{
+      position: 'fixed',
+      top: 0,
+      left: 0,
+      width: '100%',
+      height: '100%',
+      backgroundColor: 'rgba(0, 0, 0, 0.7)',
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center'
+    }} onClick={onClose}>
+      <div style={{
+        backgroundColor: 'white',
+        padding: '20px',
+        borderRadius: '10px',
+        maxWidth: '500px',
+        width: '80%'
+      }} onClick={e => e.stopPropagation()}>
+        <h2>{product.name}</h2>
+        <button onClick={onClose}>Close</button>
+      </div>
+    </div>
+  );
+};
+
 const App: React.FC = () => {
   const [products, setProducts] = useState<any[]>([]);
   const [limit, setLimit] = useState<number>(Number(localStorage.getItem('limit')) || 10);
@@ -16,6 +48,7 @@ const App: React.FC = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(false);
+  const [currentProduct, setCurrentProduct] = useState<any | null>(null);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -87,6 +120,14 @@ const App: React.FC = () => {
     setCurrentPage(Math.min(totalPages, currentPage + 1));
   };
 
+  const handleProductClick = (product: any) => {
+    setCurrentProduct(product);
+  };
+
+  const handleCloseModal = () => {
+    setCurrentProduct(null);
+  };
+
   return (
     <div>
       <ErrorBoundary>
@@ -106,7 +147,8 @@ const App: React.FC = () => {
           handlePrevPage={handlePrevPage}
           handleNextPage={handleNextPage}
         />
-        {loading ? <Spinner /> : <ProductList products={products} />}
+        {loading ? <Spinner /> : <ProductList products={products} onProductClick={handleProductClick} />}
+        {currentProduct && <Modal product={currentProduct} onClose={handleCloseModal} />}
       </ErrorBoundary>
     </div>
   );
