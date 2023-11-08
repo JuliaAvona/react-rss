@@ -14,12 +14,6 @@ const router = createBrowserRouter([
     path: '*',
     element: <App />,
     errorElement: <Page404 />,
-    children: [
-      {
-        path: ':id',
-        element: <h2>This is the blog post</h2>,
-      },
-    ],
   },
 ]);
 

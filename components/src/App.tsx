@@ -61,7 +61,7 @@ const App: React.FC = () => {
     const skip = (currentPage - 1) * limit;
     const skipParam = `skip=${skip}`;
 
-    const url = `${baseEndpoint}?${searchParam}&${limitParam}&${skipParam}`;
+    const url = `${baseEndpoint}${searchParam}&${limitParam}&${skipParam}`;
 
     const response = await fetch(url);
     const data = await response.json();
