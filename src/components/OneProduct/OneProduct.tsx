@@ -20,7 +20,7 @@ interface OneProductProps {
     onClose: () => void;
 }
 
-const OneProduct = () => {
+const OneProduct: React.FC<OneProductProps> = () => {
     const { id } = useParams();
     const navigate = useNavigate();
     const [product, setProduct] = useState<Product | null>(null);
@@ -68,7 +68,7 @@ const OneProduct = () => {
             {product && (
                 <div>
                     <h2>{product.title}</h2>
-                    <img src={product.images[0]} alt={product.title} />
+                    {/* <img src={product.images[0]} alt={product.title} /> */}
                     <p>{product.description}</p>
                     <button onClick={handleCloseModal}>Close</button>
                 </div>

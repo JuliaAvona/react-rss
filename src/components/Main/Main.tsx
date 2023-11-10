@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate, useLocation, Routes, Route, } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import ErrorBoundary from '../ErrorBoundary';
 import ProductList from '../ProductList/ProductList';
 import SearchForm from '../SearchForm/SearchForm';
 import Pagination from '../Pagination/Pagination';
 import ResultsControl from '../ResultsControl/ResultsControl';
 import Spinner from '../Spinner/Spinner';
-import OneProduct from '../OneProduct/OneProduct';
 
 const Main: React.FC = () => {
     const [products, setProducts] = useState<any[]>([]);
@@ -17,39 +16,38 @@ const Main: React.FC = () => {
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [totalPages, setTotalPages] = useState<number>(0);
     const [loading, setLoading] = useState<boolean>(false);
-    const [currentProduct, setCurrentProduct] = useState<any | null>(null);
 
     const navigate = useNavigate();
-    const location = useLocation();
 
     const getProducts = async () => {
         setLoading(true);
-        const baseEndpoint = 'https://dummyjson.com/products';
-        const searchParam = searchQuery ? `/search?q=${encodeURIComponent(searchQuery)}` : '?';
-        const limitParam = `limit=${limit}`;
-        const skip = (currentPage - 1) * limit;
-        const skipParam = `skip=${skip}`;
+        try {
+            const baseEndpoint = 'https://dummyjson.com/products';
+            const searchParam = searchQuery ? `/search?q=${encodeURIComponent(searchQuery)}` : '?';
+            const limitParam = `limit=${limit}`;
+            const skip = (currentPage - 1) * limit;
+            const skipParam = `skip=${skip}`;
 
-        const url = `${baseEndpoint}${searchParam}&${limitParam}&${skipParam}`;
+            const url = `${baseEndpoint}${searchParam}&${limitParam}&${skipParam}`;
 
-        const response = await fetch(url);
-        const data = await response.json();
-        setProducts(data.products);
+            const response = await fetch(url);
+            if (!response.ok) {
+                throw new Error(`API request failed with status ${response.status}`);
+            }
+            const data = await response.json();
+            setProducts(data.products);
 
-        const totalPagesCalculated = Math.ceil(data.total / limit);
-        setTotalPages(totalPagesCalculated);
+            const totalPagesCalculated = Math.ceil(data.total / limit);
+            setTotalPages(totalPagesCalculated);
+        } catch (error) {
+            console.error("Error fetching products:", error);
+        }
         setLoading(false);
-    }
-
-    useEffect(() => {
-        const params = new URLSearchParams(location.search);
-        const pageFromUrl = Number(params.get('page')) || 1;
-        setCurrentPage(pageFromUrl);
-    }, [location]);
+    };
 
     useEffect(() => {
         navigate(`?page=${currentPage}`);
-    }, [currentPage, navigate]);
+    }, [currentPage]);
 
     useEffect(() => {
         getProducts();
@@ -93,10 +91,6 @@ const Main: React.FC = () => {
         navigate(`/product/${product.id}`);
     };
 
-    const handleCloseModal = () => {
-        navigate(`?page=${currentPage}`);
-    }
-
     return (
         <div>
             <ErrorBoundary>
@@ -118,9 +112,6 @@ const Main: React.FC = () => {
                 />
                 {loading ? <Spinner /> : <ProductList products={products} onProductClick={handleProductClick} />}
             </ErrorBoundary>
-            <Routes>
-                <Route path="/product/:id" element={<OneProduct />} />
-            </Routes>
         </div>
     );
 };
