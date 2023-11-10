@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, Routes, Route, } from 'react-router-dom';
 import ErrorBoundary from '../ErrorBoundary';
 import ProductList from '../ProductList/ProductList';
 import SearchForm from '../SearchForm/SearchForm';
 import Pagination from '../Pagination/Pagination';
 import ResultsControl from '../ResultsControl/ResultsControl';
 import Spinner from '../Spinner/Spinner';
+import OneProduct from '../OneProduct/OneProduct';
 
 const Main: React.FC = () => {
     const [products, setProducts] = useState<any[]>([]);
@@ -89,12 +90,12 @@ const Main: React.FC = () => {
     };
 
     const handleProductClick = (product: any) => {
-        setCurrentProduct(product);
+        navigate(`/product/${product.id}`);
     };
 
     const handleCloseModal = () => {
-        setCurrentProduct(null);
-    };
+        navigate(`?page=${currentPage}`);
+    }
 
     return (
         <div>
@@ -117,6 +118,9 @@ const Main: React.FC = () => {
                 />
                 {loading ? <Spinner /> : <ProductList products={products} onProductClick={handleProductClick} />}
             </ErrorBoundary>
+            <Routes>
+                <Route path="/product/:id" element={<OneProduct />} />
+            </Routes>
         </div>
     );
 };
