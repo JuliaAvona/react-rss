@@ -21,7 +21,7 @@ const ProductList: React.FC<Props> = ({ products, onProductClick }) => {
             {products.map(product => (
                 <div className="product" key={product.id} onClick={() => onProductClick(product)}>
                     <p>{product.title}</p>
-                    <img src={product.images[0]} alt={product.title} />
+                    {/* <img src={product.images[0]} alt={product.title} /> */}
                 </div>
             ))}
         </div>

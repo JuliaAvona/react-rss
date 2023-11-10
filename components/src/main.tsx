@@ -8,10 +8,9 @@ import {
 import App from './App';
 import Page404 from './components/page-404/page-404';
 
-
 const router = createBrowserRouter([
   {
-    path: '*',
+    path: '/',
     element: <App />,
     errorElement: <Page404 />,
   },
