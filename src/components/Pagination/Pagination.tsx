@@ -8,12 +8,12 @@ interface Props {
     handleNextPage: () => void;
 }
 
-const Pagination: React.FC<Props> = ({ currentPage, totalPages, handlePrevPage, handleNextPage }) => {
+const Pagination: React.FunctionComponent<Props> = ({ currentPage, totalPages, handlePrevPage, handleNextPage }) => {
     return (
         <div className="pagination">
-            <button onClick={handlePrevPage}>Prev Page</button>
+            <button onClick={handlePrevPage} disabled={currentPage <= 1}>Prev Page</button>
             <p>{currentPage} of {totalPages}</p>
-            <button onClick={handleNextPage}>Next Page</button>
+            <button onClick={handleNextPage} disabled={currentPage >= totalPages}>Next Page</button>
         </div>
     );
 };

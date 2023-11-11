@@ -6,15 +6,16 @@ interface HttpError extends Error {
   statusText?: string;
 }
 
-const Page404: FC = () => {
-  const error = useRouteError() as HttpError;
+const Page404: FC<{}> = () => {
+  const error = useRouteError();
+  const httpError = error instanceof Error ? error as HttpError : undefined;
   console.error(error);
 
   return (
     <div className="container" id="error-page">
       <h2>404 page not found.</h2>
       <p>
-        <i>{error.statusText || error.message}</i>
+        <i>{httpError?.statusText || httpError?.message || 'An unexpected error occurred'}</i>
       </p>
       <Link to="/" title="Click here to return to home page.">Return Home</Link>
     </div>
@@ -22,4 +23,3 @@ const Page404: FC = () => {
 };
 
 export default Page404;
-

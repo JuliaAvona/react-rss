@@ -2,7 +2,7 @@ import React, {
     useEffect, useState
 } from 'react';
 import { useNavigate } from 'react-router-dom';
-import ErrorBoundary from '../ErrorBoundary';
+import ErrorBoundary from '../ErrorBoundary/ErrorBoundary';
 import ProductList from '../ProductList/ProductList';
 import SearchForm from '../SearchForm/SearchForm';
 import Pagination from '../Pagination/Pagination';
@@ -19,6 +19,8 @@ const Main: React.FC = () => {
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [totalPages, setTotalPages] = useState<number>(0);
     const [loading, setLoading] = useState<boolean>(false);
+
+
     const navigate = useNavigate();
 
     const getProducts = async () => {
@@ -64,7 +66,7 @@ const Main: React.FC = () => {
         }
     };
 
-    const handleSearchSubmit = (e: React.FormEvent) => {
+    const handleSearchSubmit = (e: React.FormEvent): void => {
         e.preventDefault();
         setSearchQuery(inputSearchQuery);
         setCurrentPage(1);

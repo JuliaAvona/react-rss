@@ -1,7 +1,11 @@
 {
   "compilerOptions": {
     "target": "ESNext",
-    "lib": ["DOM", "DOM.Iterable", "ESNext"],
+    "lib": [
+      "DOM",
+      "DOM.Iterable",
+      "ESNext"
+    ],
     "allowJs": false,
     "skipLibCheck": true,
     "esModuleInterop": true,
@@ -16,7 +20,18 @@
     "noEmit": true,
     "jsx": "react-jsx"
   },
-  "include": ["components/src"],
-  "exclude": ["**/*.scss"],
-  "references": [{ "path": "./tsconfig.node.json" }]
+  "include": [
+    "components/src"
+  ],
+  "exclude": [
+    "**/*.scss",
+    "**/*.test.ts",
+    "**/*.test.tsx",
+    "**/*.spec.ts",
+  ],
+  "references": [
+    {
+      "path": "./tsconfig.node.json"
+    }
+  ]
 }

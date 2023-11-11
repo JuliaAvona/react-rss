@@ -1,6 +1,21 @@
+interface Product {
+    id: number;
+    name: string;
+    price: number;
+}
+
+interface FetchProductsResponse {
+    products: Product[];
+    total: number;
+}
+
 const BASE_ENDPOINT = 'https://dummyjson.com/products';
 
-export const fetchProducts = async (searchQuery, limit, skip) => {
+export const fetchProducts = async (
+    searchQuery: string, 
+    limit: number, 
+    skip: number
+): Promise<FetchProductsResponse> => {
     const searchParam = searchQuery ? `/search?q=${encodeURIComponent(searchQuery)}` : '?';
     const limitParam = `limit=${limit}`;
     const skipParam = `skip=${skip}`;
@@ -11,5 +26,5 @@ export const fetchProducts = async (searchQuery, limit, skip) => {
     if (!response.ok) {
         throw new Error(`API request failed with status ${response.status}`);
     }
-    return response.json();
+    return response.json() as Promise<FetchProductsResponse>;
 };
