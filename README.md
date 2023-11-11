@@ -1,4 +1,4 @@
-# React Components
+# React RSS App
 
 ```
 npm i
