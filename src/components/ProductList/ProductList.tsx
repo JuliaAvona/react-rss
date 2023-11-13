@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import './ProductList.css';
 
 interface Product {
@@ -9,13 +9,12 @@ interface Product {
     images: string[];
 }
 
-interface Props {
+interface ProductListProps {
     products: Product[];
     onProductClick: (product: Product) => void;
 }
 
-const ProductList: React.FC<Props> = ({ products, onProductClick }) => {
-
+const ProductList: React.FC<ProductListProps> = ({ products, onProductClick }) => {
     return (
         <div className="results">
             {products.map(product => (

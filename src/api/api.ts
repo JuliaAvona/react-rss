@@ -1,7 +1,9 @@
 interface Product {
-    id: number;
-    name: string;
-    price: number;
+    id: string;
+    title: string;
+    description: string;
+    brand: string;
+    images: string[];
 }
 
 interface FetchProductsResponse {
@@ -16,11 +18,11 @@ export const fetchProducts = async (
     limit: number, 
     skip: number
 ): Promise<FetchProductsResponse> => {
-    const searchParam = searchQuery ? `/search?q=${encodeURIComponent(searchQuery)}` : '?';
+    const searchParam = searchQuery ? `search?q=${encodeURIComponent(searchQuery)}&` : '';
     const limitParam = `limit=${limit}`;
     const skipParam = `skip=${skip}`;
 
-    const url = `${BASE_ENDPOINT}${searchParam}&${limitParam}&${skipParam}`;
+    const url = `${BASE_ENDPOINT}/${searchParam}${limitParam}&${skipParam}`;
 
     const response = await fetch(url);
     if (!response.ok) {

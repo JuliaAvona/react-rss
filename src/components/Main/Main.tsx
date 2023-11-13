@@ -12,14 +12,14 @@ import { fetchProducts } from '../../api/api';
 import { useSearch } from '../SearchContext';
 
 const Main: React.FC = () => {
-    const [products, setProducts] = useState<any[]>([]);
+
     const [limit, setLimit] = useState<number>(Number(localStorage.getItem('limit')) || 10);
     const [inputLimit, setInputLimit] = useState<string>(localStorage.getItem('inputLimit') || '10');
     const [searchQuery, setSearchQuery] = useState<string>(localStorage.getItem('searchQuery') || '');
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [totalPages, setTotalPages] = useState<number>(0);
     const [loading, setLoading] = useState<boolean>(false);
-    const { inputSearchQuery, setInputSearchQuery } = useSearch();
+    const { inputSearchQuery, setInputSearchQuery, products, setProducts } = useSearch();
 
     const navigate = useNavigate();
 
