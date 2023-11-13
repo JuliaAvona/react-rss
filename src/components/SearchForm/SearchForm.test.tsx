@@ -1,42 +1,51 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
-import { describe, it, expect, beforeEach } from 'vitest';
+import { render, fireEvent, screen } from '@testing-library/react';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 import SearchForm from './SearchForm';
-import { SearchProvider } from '../SearchContext';
+import { SearchProvider, useSearch } from '../SearchContext';
 
-const localStorageMock = (() => {
-    let store = {};
+// Mock the useSearch hook
+vi.mock('../SearchContext', async () => {
+    const actual = await vi.importActual('../SearchContext');
     return {
-        getItem(key) {
-            return store[key] || null;
-        },
-        setItem(key, value) {
-            store[key] = value;
-        },
-        clear() {
-            store = {};
-        }
+        ...actual,
+        useSearch: vi.fn(),
     };
-})();
-
-Object.defineProperty(window, 'localStorage', {
-    value: localStorageMock
 });
 
 describe('SearchForm', () => {
+    const mockSetInputSearchQuery = vi.fn();
+
     beforeEach(() => {
-        localStorageMock.clear();
+        mockSetInputSearchQuery.mockReset();
+        useSearch.mockImplementation(() => ({
+            inputSearchQuery: '',
+            setInputSearchQuery: mockSetInputSearchQuery,
+        }));
     });
 
-    it('retrieves the value from local storage upon mounting', () => {
-        const testQuery = 'stored query';
-        localStorageMock.setItem('inputSearchQuery', testQuery);
+    it('renders the search form with an empty input', () => {
         render(
             <SearchProvider>
                 <SearchForm handleSearchSubmit={() => { }} />
             </SearchProvider>
         );
 
-        expect(screen.getByDisplayValue(testQuery)).toBeInTheDocument();
+        expect(screen.getByPlaceholderText('Search... #iphone')).toBeInTheDocument();
+        expect(screen.getByPlaceholderText('Search... #iphone')).toHaveValue('');
     });
+
+    it('updates the input value on change', () => {
+        render(
+            <SearchProvider>
+                <SearchForm handleSearchSubmit={() => { }} />
+            </SearchProvider>
+        );
+
+        const input = screen.getByPlaceholderText('Search... #iphone');
+        fireEvent.change(input, { target: { value: 'new query' } });
+
+        expect(mockSetInputSearchQuery).toHaveBeenCalledWith('new query');
+    });
+
 });
