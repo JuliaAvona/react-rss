@@ -1,9 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
+import { SearchProvider } from './components/SearchContext';
 import Main from './components/Main/Main';
 
 const App: React.FC = () => {
   return (
-    <Main />
+    <SearchProvider>
+      <Main />
+    </SearchProvider>
   );
 };
 

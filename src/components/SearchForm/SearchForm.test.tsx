@@ -1,7 +1,8 @@
 import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { render, screen } from '@testing-library/react';
+import { describe, it, expect, beforeEach } from 'vitest';
 import SearchForm from './SearchForm';
+import { SearchProvider } from '../SearchContext';
 
 const localStorageMock = (() => {
     let store = {};
@@ -29,8 +30,12 @@ describe('SearchForm', () => {
 
     it('retrieves the value from local storage upon mounting', () => {
         const testQuery = 'stored query';
-        localStorageMock.setItem('searchQuery', testQuery);
-        render(<SearchForm inputSearchQuery={testQuery} handleSearchSubmit={() => { }} setInputSearchQuery={() => { }} />);
+        localStorageMock.setItem('inputSearchQuery', testQuery);
+        render(
+            <SearchProvider>
+                <SearchForm handleSearchSubmit={() => { }} />
+            </SearchProvider>
+        );
 
         expect(screen.getByDisplayValue(testQuery)).toBeInTheDocument();
     });
