@@ -10,6 +10,7 @@ import ResultsControl from '../ResultsControl/ResultsControl';
 import Spinner from '../Spinner/Spinner';
 import { fetchProducts } from '../../api/api';
 import { useSearch } from '../SearchContext';
+import { Product } from '../../types/types';
 
 const Main: React.FC = () => {
 
@@ -19,7 +20,7 @@ const Main: React.FC = () => {
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [totalPages, setTotalPages] = useState<number>(0);
     const [loading, setLoading] = useState<boolean>(false);
-    const { inputSearchQuery, setInputSearchQuery, products, setProducts } = useSearch();
+    const { inputSearchQuery, products, setProducts } = useSearch();
 
     const navigate = useNavigate();
 
@@ -80,7 +81,7 @@ const Main: React.FC = () => {
         setCurrentPage(Math.min(totalPages, currentPage + 1));
     };
 
-    const handleProductClick = (product: any) => {
+    const handleProductClick = (product: Product) => {
         navigate(`/product/${product.id}`);
     };
 

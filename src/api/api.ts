@@ -11,7 +11,7 @@ interface FetchProductsResponse {
     total: number;
 }
 
-const BASE_ENDPOINT = 'https://dummyjson.com/products';
+const BASE_ENDPOINT = 'https://dummyjson.com/products?';
 
 export const fetchProducts = async (
     searchQuery: string, 

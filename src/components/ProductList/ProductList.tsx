@@ -1,18 +1,6 @@
 import React from 'react';
 import './ProductList.css';
-
-interface Product {
-    id: string;
-    title: string;
-    description: string;
-    brand: string;
-    images: string[];
-}
-
-interface ProductListProps {
-    products: Product[];
-    onProductClick: (product: Product) => void;
-}
+import { Product, ProductListProps } from '../../types/types';
 
 const ProductList: React.FC<ProductListProps> = ({ products, onProductClick }) => {
     return (
