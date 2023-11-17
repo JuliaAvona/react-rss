@@ -1,12 +1,16 @@
 import React from 'react';
 import { SearchProvider } from './components/SearchContext';
 import Main from './components/Main/Main';
+import { Provider } from 'react-redux';
+import { store } from './app/store';
 
 const App: React.FC = () => {
   return (
-    <SearchProvider>
-      <Main />
-    </SearchProvider>
+    <Provider store={store}>
+      <SearchProvider>
+        <Main />
+      </SearchProvider>
+    </Provider>
   );
 };
 

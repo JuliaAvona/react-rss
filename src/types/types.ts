@@ -10,3 +10,11 @@ export interface ProductListProps {
     products: Product[];
     onProductClick: (product: Product) => void;
 }
+
+export interface SearchState {
+  searchQuery: string;
+}
+
+export interface RootState {
+  search: SearchState;
+}

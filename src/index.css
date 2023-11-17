@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,700&family=Inter:wght@400;500;600;800&family=Roboto:wght@400;700&display=swap');
+
 :root {
   font-family: Georgia, serif;
   line-height: 1.5;
@@ -30,6 +32,7 @@ a:hover {
 body {
   margin: 0;
   padding: 0;
+  font-family: 'Roboto', sans-serif;
 }
 
 h1 {

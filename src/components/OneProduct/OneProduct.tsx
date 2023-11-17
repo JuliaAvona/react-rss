@@ -63,7 +63,7 @@ const OneProduct: React.FC = () => {
             {product && (
                 <div>
                     <h2>{product.title}</h2>
-                    {<img src={product.images[0]} alt={product.title} />}
+                    {/* {<img src={product.images[0]} alt={product.title} />} */}
                     <p>{product.description}</p>
                     <button onClick={handleCloseModal}>Close</button>
                 </div>

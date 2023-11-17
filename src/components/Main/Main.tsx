@@ -10,7 +10,9 @@ import ResultsControl from '../ResultsControl/ResultsControl';
 import Spinner from '../Spinner/Spinner';
 import { fetchProducts } from '../../api/api';
 import { useSearch } from '../SearchContext';
-import { Product } from '../../types/types';
+import { Product, RootState } from '../../types/types';
+import { useSelector, useDispatch } from 'react-redux';
+import { setSearchQuery } from '../../features/search/searchSlice';
 
 const Main: React.FC = () => {
 
@@ -21,6 +23,9 @@ const Main: React.FC = () => {
     const [totalPages, setTotalPages] = useState<number>(0);
     const [loading, setLoading] = useState<boolean>(false);
     const { inputSearchQuery, products, setProducts } = useSearch();
+
+    const searchQuery = useSelector((state: RootState) => state.search.searchQuery);
+    const dispatch = useDispatch();
 
     const navigate = useNavigate();
 
@@ -58,6 +63,10 @@ const Main: React.FC = () => {
         }
     }, [limit, inputLimit, searchQuery, inputSearchQuery]);
 
+    useEffect(() => {
+        setInputSearchQuery(searchQuery);
+    }, [searchQuery]);
+
     const handleUpdateClick = (e: React.FormEvent) => {
         e.preventDefault();
         const newLimit = parseInt(inputLimit, 10);
@@ -69,7 +78,7 @@ const Main: React.FC = () => {
 
     const handleSearchSubmit = (e: React.FormEvent): void => {
         e.preventDefault();
-        setSearchQuery(inputSearchQuery);
+        dispatch(setSearchQuery(inputSearchQuery));
         setCurrentPage(1);
     };
 
