@@ -18,13 +18,11 @@ const Main: React.FC = () => {
 
     const [limit, setLimit] = useState<number>(Number(localStorage.getItem('limit')) || 10);
     const [inputLimit, setInputLimit] = useState<string>(localStorage.getItem('inputLimit') || '10');
-    const [searchQuery, setSearchQuery] = useState<string>(localStorage.getItem('searchQuery') || '');
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [totalPages, setTotalPages] = useState<number>(0);
     const [loading, setLoading] = useState<boolean>(false);
     const { inputSearchQuery, products, setProducts } = useSearch();
-
-    const searchQuery = useSelector((state: RootState) => state.search.searchQuery);
+    const searchQuery = useSelector((state: RootState) => state.search.searchQuery) || (localStorage.getItem('searchQuery') || '');
     const dispatch = useDispatch();
 
     const navigate = useNavigate();
@@ -64,7 +62,7 @@ const Main: React.FC = () => {
     }, [limit, inputLimit, searchQuery, inputSearchQuery]);
 
     useEffect(() => {
-        setInputSearchQuery(searchQuery);
+        setSearchQuery(inputSearchQuery)
     }, [searchQuery]);
 
     const handleUpdateClick = (e: React.FormEvent) => {
