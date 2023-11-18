@@ -8,7 +8,6 @@ interface Props {
 
 const SearchForm: React.FC<Props> = ({ handleSearchSubmit }) => {
     const { inputSearchQuery, setInputSearchQuery } = useSearch();
-    console.log('inputSearchQuery' + inputSearchQuery);
 
     return (
         <form onSubmit={handleSearchSubmit} className="search">

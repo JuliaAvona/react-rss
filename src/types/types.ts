@@ -17,4 +17,7 @@ export interface SearchState {
 
 export interface RootState {
   search: SearchState;
+  cards: {
+    cards: Product[];
+  }
 }

@@ -13,6 +13,7 @@ import { useSearch } from '../SearchContext';
 import { Product, RootState } from '../../types/types';
 import { useSelector, useDispatch } from 'react-redux';
 import { setSearchQuery } from '../../features/search/searchSlice';
+import { setCards } from '../../features/cards/cardsSlice';
 
 const Main: React.FC = () => {
 
@@ -21,19 +22,19 @@ const Main: React.FC = () => {
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [totalPages, setTotalPages] = useState<number>(0);
     const [loading, setLoading] = useState<boolean>(false);
-    const { inputSearchQuery, products, setProducts } = useSearch();
+    const { inputSearchQuery } = useSearch();
     const searchQuery = useSelector((state: RootState) => state.search.searchQuery) || (localStorage.getItem('searchQuery') || '');
+    const products = useSelector((state: RootState) => state.cards.cards);
     const dispatch = useDispatch();
-
     const navigate = useNavigate();
 
     const getProducts = async () => {
         setLoading(true);
         try {
             const skip = (currentPage - 1) * limit;
+            console.log(limit);
             const data = await fetchProducts(searchQuery, limit, skip);
-
-            setProducts(data.products);
+            dispatch(setCards(data.products));
             const totalPagesCalculated = Math.ceil(data.total / limit);
             setTotalPages(totalPagesCalculated);
         } catch (error) {
