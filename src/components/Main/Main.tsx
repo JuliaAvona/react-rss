@@ -13,7 +13,7 @@ import { useSearch } from '../SearchContext';
 import { Product, RootState } from '../../types/types';
 import { useSelector, useDispatch } from 'react-redux';
 import { setSearchQuery } from '../../features/search/searchSlice';
-import { setCards } from '../../features/cards/cardsSlice';
+import { setCards, setLoading, selectIsLoading } from '../../features/cards/cardsSlice';
 
 const Main: React.FC = () => {
 
@@ -21,15 +21,16 @@ const Main: React.FC = () => {
     const [inputLimit, setInputLimit] = useState<string>(localStorage.getItem('inputLimit') || '10');
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [totalPages, setTotalPages] = useState<number>(0);
-    const [loading, setLoading] = useState<boolean>(false);
     const { inputSearchQuery } = useSearch();
     const searchQuery = useSelector((state: RootState) => state.search.searchQuery) || (localStorage.getItem('searchQuery') || '');
     const products = useSelector((state: RootState) => state.cards.cards);
+    const isLoading = useSelector(selectIsLoading);
+
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
     const getProducts = async () => {
-        setLoading(true);
+        dispatch(setLoading(true));
         try {
             const skip = (currentPage - 1) * limit;
             console.log(limit);
@@ -40,7 +41,7 @@ const Main: React.FC = () => {
         } catch (error) {
             console.error("Error fetching products:", error);
         }
-        setLoading(false);
+        dispatch(setLoading(false));
     };
 
     useEffect(() => {
@@ -110,7 +111,7 @@ const Main: React.FC = () => {
                     handlePrevPage={handlePrevPage}
                     handleNextPage={handleNextPage}
                 />
-                {loading ? <Spinner /> : <ProductList products={products} onProductClick={handleProductClick} />}
+                {isLoading ? <Spinner /> : <ProductList products={products} onProductClick={handleProductClick} />}
             </ErrorBoundary>
         </div>
     );
