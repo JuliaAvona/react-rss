@@ -74,3 +74,10 @@ export interface SearchContextType {
     setProducts: (products: Product[]) => void;
     onProductClick: (product: Product) => void;
 }
+
+  export interface ProductsResponse {
+    products: Product[];
+    total: number;
+    skip: number;
+    limit: number;
+}

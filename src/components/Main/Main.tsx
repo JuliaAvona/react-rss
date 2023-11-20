@@ -10,6 +10,7 @@ import { useSearch } from '../SearchContext';
 import { useSelector, useDispatch } from 'react-redux';
 import { setSearchQuery } from '../../redux/features/search/searchSlice';
 import { useFetchProductsQuery } from '../../api/api';
+import { RootState } from '../../redux/app/store';
 
 const Main: React.FC = () => {
     const [limit, setLimit] = useState<number>(Number(localStorage.getItem('limit')) || 10);
@@ -18,12 +19,11 @@ const Main: React.FC = () => {
     const [totalPages, setTotalPages] = useState<number>(0);
 
     const { inputSearchQuery } = useSearch();
-    const searchQuery = useSelector((state) => state.search.searchQuery) || localStorage.getItem('searchQuery') || '';
+    const searchQuery = useSelector((state: RootState) => state.search.searchQuery) || localStorage.getItem('searchQuery') || '1';
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
     const skip = (currentPage - 1) * limit;
-
     const { data, error, isLoading } = useFetchProductsQuery({ searchQuery, limit, skip });
     console.log(data);
 
@@ -86,7 +86,7 @@ const Main: React.FC = () => {
                     handlePrevPage={handlePrevPage}
                     handleNextPage={handleNextPage}
                 />
-                {isLoading ? <Spinner /> : <ProductList products={data?.products} onProductClick={handleProductClick} />}
+                {isLoading ? <Spinner /> : data && <ProductList products={data.products} onProductClick={handleProductClick} />}
             </ErrorBoundary>
         </div>
     );
