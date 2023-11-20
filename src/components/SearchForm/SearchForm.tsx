@@ -1,12 +1,9 @@
 import React from 'react';
 import './SearchForm.css';
 import { useSearch } from '../SearchContext';
+import { SearchProps } from '../../types/types';
 
-interface Props {
-    handleSearchSubmit: (e: React.FormEvent) => void;
-}
-
-const SearchForm: React.FC<Props> = ({ handleSearchSubmit }) => {
+const SearchForm: React.FC<SearchProps> = ({ handleSearchSubmit }) => {
     const { inputSearchQuery, setInputSearchQuery } = useSearch();
 
     return (

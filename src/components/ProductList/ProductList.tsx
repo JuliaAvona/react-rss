@@ -1,6 +1,6 @@
 import React from 'react';
 import './ProductList.css';
-import { Product, ProductListProps } from '../../types/types';
+import { ProductListProps } from '../../types/types';
 
 const ProductList: React.FC<ProductListProps> = ({ products, onProductClick }) => {
     return (

@@ -1,13 +1,8 @@
 import React from 'react';
 import './ResultsControl.css';
+import { ResultsControlProps } from '../../types/types';
 
-interface Props {
-    inputLimit: string;
-    handleUpdateClick: (e: React.FormEvent) => void;
-    setInputLimit: (value: string) => void;
-}
-
-const ResultsControl: React.FC<Props> = ({ inputLimit, handleUpdateClick, setInputLimit }) => {
+const ResultsControl: React.FC<ResultsControlProps> = ({ inputLimit, handleUpdateClick, setInputLimit }) => {
     return (
         <form onSubmit={handleUpdateClick} className="control">
             <input

@@ -1,32 +1,20 @@
-interface Product {
-    id: string;
-    title: string;
-    description: string;
-    brand: string;
-    images: string[];
-}
+import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { ProductsResponse } from '../types/types';
 
-interface FetchProductsResponse {
-    products: Product[];
-    total: number;
-}
+export const productsApi = createApi({
+    reducerPath: 'productsApi',
+    baseQuery: fetchBaseQuery({ baseUrl: 'https://dummyjson.com' }),
+    endpoints: (builder) => ({
+        fetchProducts: builder.query<ProductsResponse, { searchQuery?: string; limit: number; skip: number }>({
+            query: ({ searchQuery, limit, skip }) => {
+                const searchParam = searchQuery ? `/products/search?q=${encodeURIComponent(searchQuery)}` : '/products';
+                const limitParam = `limit=${limit}`;
+                const skipParam = `skip=${skip}`;
 
-const BASE_ENDPOINT = 'https://dummyjson.com/products';
+                return { url: `${searchParam}&${limitParam}&${skipParam}` };
+            },
+        }),
+    }),
+});
 
-export const fetchProducts = async (
-    searchQuery: string, 
-    limit: number, 
-    skip: number
-): Promise<FetchProductsResponse> => {
-    const searchParam = searchQuery ? `/search?q=${encodeURIComponent(searchQuery)}&` : '';
-    const limitParam = `?/limit=${limit}`;
-    const skipParam = `skip=${skip}`;
-
-    const url = `${BASE_ENDPOINT}${searchParam}${limitParam}&${skipParam}`;
-
-    const response = await fetch(url);
-    if (!response.ok) {
-        throw new Error(`API request failed with status ${response.status}`);
-    }
-    return response.json() as Promise<FetchProductsResponse>;
-};
+export const { useFetchProductsQuery } = productsApi;

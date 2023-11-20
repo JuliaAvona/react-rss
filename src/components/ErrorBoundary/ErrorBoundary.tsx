@@ -1,9 +1,5 @@
 import React, { Component } from 'react';
-
-interface IErrorBoundaryState {
-  hasError: boolean;
-}
-
+import { IErrorBoundaryState } from '../../types/types';
 class ErrorBoundary extends Component<
   React.PropsWithChildren<unknown>,
   IErrorBoundaryState

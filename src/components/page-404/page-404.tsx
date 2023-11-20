@@ -1,10 +1,7 @@
 import React, { FC } from 'react';
 import { Link, useRouteError } from 'react-router-dom';
 import './page-404.css';
-
-interface HttpError extends Error {
-  statusText?: string;
-}
+import { HttpError } from '../../types/types';
 
 const Page404: FC<{}> = () => {
   const error = useRouteError();

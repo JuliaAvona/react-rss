@@ -1,20 +1,5 @@
 import React, { createContext, useState, useContext, ReactNode } from 'react';
-
-interface Product {
-    id: string;
-    title: string;
-    description: string;
-    brand: string;
-    images: string[];
-}
-
-interface SearchContextType {
-    inputSearchQuery: string;
-    setInputSearchQuery: (query: string) => void;
-    products: Product[];
-    setProducts: (products: Product[]) => void;
-    onProductClick: (product: Product) => void;
-}
+import { SearchContextType, Product } from '../types/types';
 
 const SearchContext = createContext<SearchContextType | null>(null);
 
