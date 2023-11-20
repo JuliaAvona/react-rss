@@ -2,7 +2,7 @@ import React from 'react';
 import { SearchProvider } from './components/SearchContext';
 import Main from './components/Main/Main';
 import { Provider } from 'react-redux';
-import { store } from './app/store';
+import { store } from './redux/app/store';
 
 const App: React.FC = () => {
   return (

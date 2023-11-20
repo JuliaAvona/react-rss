@@ -12,8 +12,8 @@ import { fetchProducts } from '../../api/api';
 import { useSearch } from '../SearchContext';
 import { Product, RootState } from '../../types/types';
 import { useSelector, useDispatch } from 'react-redux';
-import { setSearchQuery } from '../../features/search/searchSlice';
-import { setCards, setLoading, selectIsLoading } from '../../features/cards/cardsSlice';
+import { setSearchQuery } from '../../redux/features/search/searchSlice';
+import { setCards, setLoading, selectIsLoading } from '../../redux/features/cards/cardsSlice';
 
 const Main: React.FC = () => {
 
@@ -33,7 +33,6 @@ const Main: React.FC = () => {
         dispatch(setLoading(true));
         try {
             const skip = (currentPage - 1) * limit;
-            console.log(limit);
             const data = await fetchProducts(searchQuery, limit, skip);
             dispatch(setCards(data.products));
             const totalPagesCalculated = Math.ceil(data.total / limit);
