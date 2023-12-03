@@ -3,8 +3,6 @@ import { useDispatch } from 'react-redux';
 import './Form1.css';
 import { Link } from 'react-router-dom';
 import { saveFormData } from '../../../redux/formSlice';
-import { useSelector } from 'react-redux';
-import { RootState } from '../../../redux/store';
 
 function Form1() {
   const dispatch = useDispatch();

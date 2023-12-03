@@ -29,11 +29,18 @@ function DisplayComponent() {
 }
 
 const Main = () => {
+  const formsData = useSelector((state: RootState) => state.form.formsData);
+
   return (
     <div className="main">
       <Navbar></Navbar>
       <main>
-        <DisplayComponent />
+        <h1>Main Page</h1>
+        {formsData.length === 0 ? (
+          <p>Please fill out the form</p>
+        ) : (
+          <DisplayComponent />
+        )}
       </main>
     </div>
   );
