@@ -3,6 +3,8 @@ import { useDispatch } from 'react-redux';
 import './Form1.css';
 import { Link } from 'react-router-dom';
 import { saveFormData } from '../../../redux/formSlice';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../../redux/store';
 
 function Form1() {
   const dispatch = useDispatch();
@@ -11,23 +13,44 @@ function Form1() {
   const email = useRef<HTMLInputElement>(null);
   const password = useRef<HTMLInputElement>(null);
   const gender = useRef<HTMLInputElement>(null);
-  const image = useRef<HTMLInputElement>(null);
   const country = useRef<HTMLInputElement>(null);
+  let imageBase64 = '' as string;
+
+  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files ? event.target.files[0] : null;
+    if (file) {
+      if (!file.type.match('image/png') && !file.type.match('image/jpeg')) {
+        alert('Only PNG and JPEG files are allowed');
+        return;
+      }
+
+      if (file.size > 5242880) {
+        alert('File size should not exceed 5MB');
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = (loadEvent) => {
+        imageBase64 = loadEvent.target?.result as string;
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   const handleFormSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const formData = {
+    const newFormData = {
       name: name.current ? name.current.value : '',
       age: age.current ? age.current.value : '',
       email: email.current ? email.current.value : '',
       password: password.current ? password.current.value : '',
       gender: gender.current ? gender.current.value : '',
-      image: image.current ? image.current.value : '',
+      image: imageBase64,
       country: country.current ? country.current.value : '',
     };
-    dispatch(saveFormData(formData));
+    dispatch(saveFormData(newFormData));
+    imageBase64 = '';
   };
-
 
   return (
     <div className="main">
@@ -64,7 +87,13 @@ function Form1() {
         <label htmlFor="terms">Accept Terms and Conditions:</label>
         <input type="checkbox" id="terms" name="terms" required />
         <label htmlFor="picture">Upload Picture:</label>
-        <input type="file" id="picture" name="picture" accept="image/png, image/jpeg" ref={image} />
+        <input
+          type="file"
+          id="picture"
+          name="picture"
+          accept="image/png, image/jpeg"
+          onChange={handleImageChange}
+        />
         <label htmlFor="country">Country:</label>
         <input type="text" id="country" name="country" required list="countries" ref={country} />
         <datalist id="countries">

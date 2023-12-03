@@ -1,15 +1,16 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import {FormData} from '../types/types';
 
-const initialState = {
-  formData: {},
+const initialState: { formsData: FormData[] } = {
+  formsData: [],
 };
 
 export const formSlice = createSlice({
   name: 'form',
   initialState,
   reducers: {
-    saveFormData: (state, action) => {
-      state.formData = action.payload;
+    saveFormData: (state, action: PayloadAction<FormData>) => {
+      state.formsData.push(action.payload);
     },
   },
 });
