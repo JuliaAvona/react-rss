@@ -27,3 +27,16 @@ export const passwordValidationSchema = Yup.object({
       .matches(/(?=.*[A-Z])/, 'Password must contain at least one uppercase letter')
       .matches(/(?=.*[\W])/, 'Password must contain at least one special character'),
   });
+
+export const passwordValidationSchema2 = Yup.object({
+  password: Yup.string()
+    .required('Password is required')
+    .matches(/(?=.*\d)/, 'Password must contain at least one number')
+    .matches(/(?=.*[a-z])/, 'Password must contain at least one lowercase letter')
+    .matches(/(?=.*[A-Z])/, 'Password must contain at least one uppercase letter')
+    .matches(/(?=.*[\W])/, 'Password must contain at least one special character'),
+    
+  confirmPassword: Yup.string()
+    .oneOf([Yup.ref('password')], "Passwords don't match")
+    .required('Confirm password is required'),
+});

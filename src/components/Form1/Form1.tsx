@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 import { useDispatch } from 'react-redux';
-import './Form1.css';
+import './Form.css';
 import { Link, useNavigate } from 'react-router-dom';
 import { saveFormData } from '../../../redux/formSlice';
 import { nameValidationSchema, ageValidationSchema, emailValidationSchema, passwordValidationSchema } from '../Validation/validation';
@@ -116,6 +116,15 @@ function Form1() {
     if (!name.current?.value || !age.current?.value || !email.current?.value ||
       !password.current?.value || !confirmPassword.current?.value ||
       !gender.current?.value || !country.current?.value || !imageBase64) {
+      console.log(!name.current?.value);
+      console.log(!age.current?.value);
+      console.log(!email.current?.value);
+      console.log(!password.current?.value);
+      console.log(!confirmPassword.current?.value);
+      console.log(!gender.current?.value);
+      console.log(!country.current?.value);
+      console.log(!imageBase64);
+
       alert('Please fill in all fields');
       return;
     }
@@ -197,12 +206,7 @@ function Form1() {
           onChange={handleImageChange}
         />
         <label htmlFor="countrySelect">Country:</label>
-        <input type="text" id="countrySelect" name="countryName" required list="countryList" />
-        <datalist id="countryList">
-          <option value="United States of America" />
-          <option value="Canada" />
-          <option value="Mexico" />
-        </datalist>
+        <input type="text" id="countrySelect" name="countryName" required ref={country} />
         <br />
         <button type="submit">Submit</button>
         <br />
