@@ -1,0 +1,16 @@
+a {
+    text-decoration: none;
+    width: 100%;
+}
+
+nav {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5rem;
+    width: 200px;
+}
+
+button {
+    min-width: 200px;
+}
