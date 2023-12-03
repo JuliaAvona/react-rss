@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { saveFormData } from '../../../redux/formSlice';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import './Form2.css';
 
 function Form2() {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const [name, setName] = useState('');
   const [age, setAge] = useState('');
@@ -18,7 +19,6 @@ function Form2() {
   const handleImageChange = (event) => {
     const file = event.target.files ? event.target.files[0] : null;
     if (file) {
-      // Проверки на тип и размер файла
       if (!file.type.match('image/png') && !file.type.match('image/jpeg')) {
         alert('Only PNG and JPEG files are allowed');
         return;
@@ -38,7 +38,6 @@ function Form2() {
 
   const handleFormSubmit = (event) => {
     event.preventDefault();
-    // Проверка на совпадение паролей
     if (password !== confirmPassword) {
       alert("Passwords don't match");
       return;
@@ -52,21 +51,14 @@ function Form2() {
       country,
       image: imageBase64,
     };
+
     dispatch(saveFormData(newFormData));
-    // Очистка формы
-    setName('');
-    setAge('');
-    setEmail('');
-    setPassword('');
-    setConfirmPassword('');
-    setGender('');
-    setCountry('');
-    setImageBase64('');
+    navigate('/');
   };
 
   return (
     <div className="main">
-      <h1>Form 1</h1>
+      <h1>Form 2</h1>
       <form onSubmit={handleFormSubmit}>
         <label htmlFor="name">Name:</label>
         <input type="text" id="name" name="name" pattern="[A-Z][a-zA-Z]*" required value={name} onChange={(e) => setName(e.target.value)} />
@@ -92,10 +84,10 @@ function Form2() {
           <input type="radio" id="other" name="gender" value="other" checked={gender === 'other'} onChange={(e) => setGender(e.target.value)} />
           <label htmlFor="other">Other</label>
         </fieldset>
-
+        <label htmlFor="terms">Accept Terms and Conditions:</label>
+        <input type="checkbox" id="terms" name="terms" required />
         <label htmlFor="picture">Upload Picture:</label>
         <input type="file" id="picture" name="picture" accept="image/png, image/jpeg" onChange={handleImageChange} />
-
         <label htmlFor="country">Country:</label>
         <input type="text" id="country" name="country" required list="countries" value={country} onChange={(e) => setCountry(e.target.value)} />
         <datalist id="countries">
@@ -105,7 +97,7 @@ function Form2() {
         </datalist>
 
         <br />
-        <button type="submit">Submit</button>
+        <button type="submit" disabled={!name || !age || !email || !password || !confirmPassword || !gender || !country}>Submit</button>
       </form>
       <Link to="/">
         <button>Back to Main Page</button>
